@@ -17,14 +17,17 @@ def _extract_ids(input:str) -> dict:
 def _connect(sn:str=None, vid:int=0x1313, did:int=0x8078, read_term:str='\n', write_term:str='\n', suppress_output:bool=False, timeout:int=1000) -> pyvisa.Resource:
     rm = pyvisa.ResourceManager()
     for dev in rm.list_resources():
-        m = _extract_ids(dev)
-        if int(m['vendor_id'], 16) == vid and int(m['device_id'], 16) == did \
-            and (sn == None or sn == m['serial']):
-            if not suppress_output:
-                print(f'Connecting to {m['serial']}')
-            ret = rm.open_resource(dev, read_termination=read_term, write_termination=write_term, timeout=timeout)
-            power_meters.append(ret)
-            return ret
+        try:
+            m = _extract_ids(dev)
+            if int(m['vendor_id'], 16) == vid and int(m['device_id'], 16) == did \
+                and (sn == None or sn == m['serial']):
+                if not suppress_output:
+                    print(f'Connecting to {m['serial']}')
+                ret = rm.open_resource(dev, read_termination=read_term, write_termination=write_term, timeout=timeout)
+                power_meters.append(ret)
+                return ret
+        except:
+            continue
     raise RuntimeError('Power Meter not found')
 
 def connect(sn:str=None, vid:int=0x1313, did:int=0x8078, read_term:str='\n', write_term:str='\n', suppress_output:bool=False, timeout:int=1000) -> pyvisa.Resource:

@@ -1,4 +1,5 @@
 import requests
+from ThorlabsPM100 import ThorlabsPM100
 
 def _check_url(url:str, port:int) -> None:
     if not isinstance(port, int):
@@ -16,6 +17,7 @@ class Instrument:
         if sn != None:
             self.sn = sn
         else: self.sn = ''
+        self.power_meter = ThorlabsPM100(inst=self)
 
     def write(self, command:str) -> None:
         r = requests.post('http://' + str(self.url) + ':' + str(self.port) + '/' + self.sn, headers={'Content-Type': 'text/plain'}, data=command)
