@@ -52,13 +52,19 @@ def query(sn:str, vid:int, did:int):
     print('Recv: ' + flask.request.get_data(as_text=True))
     if pm == None:
         flask.abort(404)
-    if flask.request.method == 'GET':
-        return pm.query(flask.request.get_data(as_text=True))
-    elif flask.request.method == 'POST':
-        pm.write(flask.request.get_data(as_text=True))
-        return ('', 204)
-    else:
-        flask.abort(400)
+    try:
+        if flask.request.method == 'GET':
+            return pm.query(flask.request.get_data(as_text=True))
+        elif flask.request.method == 'POST':
+            pm.write(flask.request.get_data(as_text=True))
+            return ('', 204)
+        else:
+            flask.abort(400)
+    except:
+        import traceback
+        pm.close()
+        power_meters.remove(pm)
+        flask.abort(traceback.format_exc(), 500)
 
 @app.route('/<sn>/<int:vid>/<int:did>', methods=['GET', 'POST'])
 def query_full(sn:str, vid:int, did:int):
