@@ -29,18 +29,18 @@ The following examples are run on the client side using Python.
 ### Creating a power meter object
 ```
 import pmclient
-from ThorlabsPM100 import ThorlabsPM100
-pm = ThorlabsPM100(inst=pmclient.Instrument('<ip_address>', <port>))
+inst = pmclient.Instrument('<ip_address>', <port>)
+print(inst.power_meter.read)
 ```
 
-`pm` here is now equivalent to the `power_meter` object in [ThorlabsPM100 example](https://github.com/clade/ThorlabsPM100) and can be called equivalently.
+`inst.power_meter` here is now equivalent to the `power_meter` object in [ThorlabsPM100 example](https://github.com/clade/ThorlabsPM100) and can be called equivalently.
 
 Commands that set or query a value are Python properties of ThorlabsPM100 class. Other command are methods of ThorlabsPM100 class :
 ```
-print(pm.read)                # Read-only property
-print(pm.sense.average.count) # read property
-pm.sense.average.count = 10   # write property
-pm.system.beeper.immediate()  # method
+print(inst.power_meter.read)                # Read-only property
+print(inst.power_meter.sense.average.count) # read property
+inst.power_meter.sense.average.count = 10   # write property
+inst.power_meter.system.beeper.immediate()  # method
 ```
 
 For the complete set of instructions, consult the `SCPI Command Reference` section in the manual [online](https://www.thorlabs.us/thorProduct.cfm?partNumber=PM100D) or in this repository: [PM100D-Manual.pdf](./PM100D-Manual.pdf)
